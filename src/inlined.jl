@@ -1,48 +1,7 @@
-
-@inline function eftSum2{T<:AbstractFloat}(a::T, b::T)
-  x = a + b
-  t = x - a
-  y = (a - (x - t)) + (b - t)
-  x,y
-end
+#= single parameter error-free transformations =#
 
 
-@inline function eftSum2inOrder{T<:AbstractFloat}(a::T, b::T)
-  x = a + b
-  y = b - (x - a)
-  x,y
-end
-
-
-@inline function eftDiff2{T<:AbstractFloat}(a::T, b::T)
-  x = a - b
-  t = x - a
-  y = (a - (x - t)) - (b + t)
-  x,y
-end
-
-
-@inline function eftDiff2inOrder{T<:AbstractFloat}(a::T, b::T)
-  x = a - b
-  y = (a - x) - b
-  x,y
-end
-
-@inline function eftProd2{T<:AbstractFloat}(a::T, b::T)
-    x = a * b
-    y = fma(a, b, -x)
-    x,y
-end
-
-# !!sassafrass!!
-# 'y' must be negated to get the right result
-@inline function eftDiv2{T<:AbstractFloat}(a::T,b::T)
-     x = a/b
-     y = -(fma(x,b,-a)/b)
-     x,y
-end
-
-# !!sassafrass!!
+# sassafrass!
 # 'y' must be negated to get the right result
 @inline function eftRecip{T<:AbstractFloat}(a::T)
      x = one(T)/a
@@ -84,7 +43,52 @@ end
     x,y
 end
 
-#= three term error-free transformations =#
+#= two parameter error-free transformations =#
+
+@inline function eftSum2{T<:AbstractFloat}(a::T, b::T)
+  x = a + b
+  t = x - a
+  y = (a - (x - t)) + (b - t)
+  x,y
+end
+
+
+@inline function eftSum2inOrder{T<:AbstractFloat}(a::T, b::T)
+  x = a + b
+  y = b - (x - a)
+  x,y
+end
+
+
+@inline function eftDiff2{T<:AbstractFloat}(a::T, b::T)
+  x = a - b
+  t = x - a
+  y = (a - (x - t)) - (b + t)
+  x,y
+end
+
+
+@inline function eftDiff2inOrder{T<:AbstractFloat}(a::T, b::T)
+  x = a - b
+  y = (a - x) - b
+  x,y
+end
+
+@inline function eftProd2{T<:AbstractFloat}(a::T, b::T)
+    x = a * b
+    y = fma(a, b, -x)
+    x,y
+end
+
+# sassafrass!
+# 'y' must be negated to get the right result
+@inline function eftDiv2{T<:AbstractFloat}(a::T,b::T)
+     x = a/b
+     y = -(fma(x,b,-a)/b)
+     x,y
+end
+
+#= three parameter error-free transformations =#
 
 function eftSum3{T<:Float64}(a::T,b::T,c::T)
     s,t = eftSum2(b, c)
@@ -102,14 +106,12 @@ function eftSum3inOrder{T<:Float64}(a::T,b::T,c::T)
     x,y,z
 end
 
-
 function eftProd3{T<:Float64}(a::T, b::T, c::T)
     p,e = eftProd2(a,b)
     x,p = eftProd2(p,c)
     y,z = eftProd2(e,c)
     x,y,z
 end
-
 
 function eftFMA{T<:Float64}(a::T, b::T, c::T)
     x = fma(a,b,c)
