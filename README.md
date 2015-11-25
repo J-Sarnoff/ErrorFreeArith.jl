@@ -1,7 +1,7 @@
 # ErrorFreeArith.jl
 #### Error-Free transformations for arithmetic ops
 ```ruby
-                         Jeffrey Sarnoff            2015-Nov-20
+                         Jeffrey Sarnoff            2015-Nov-25
 ```
  
 
