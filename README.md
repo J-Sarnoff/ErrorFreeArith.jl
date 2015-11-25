@@ -12,3 +12,5 @@ Use:  hi, lo = eft<function>()
 The lo part is the residual value not captured in the high part.
 The ideal result is much closer to hi+lo (in extended precision).
 
+Runs as fast as it may, with hardware fma -- faster.
+
