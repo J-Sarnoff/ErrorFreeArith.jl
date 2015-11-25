@@ -1,7 +1,5 @@
 #= single parameter error-free transformations =#
 
-
-# sassafrass!
 # 'y' must be negated to get the right result
 @inline function eftRecip{T<:AbstractFloat}(a::T)
      x = one(T)/a
@@ -80,7 +78,6 @@ end
     x,y
 end
 
-# sassafrass!
 # 'y' must be negated to get the right result
 @inline function eftDiv2{T<:AbstractFloat}(a::T,b::T)
      x = a/b
