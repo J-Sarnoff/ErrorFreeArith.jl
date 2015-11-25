@@ -55,9 +55,31 @@ end
    Augmented precision square roots, 2-D norms and discussion on correctly reounding sqrt(x^2 + y^2)
    by Nicolas Brisebarre, Mioara Joldes, Erik Martin-Dorel, Hean-Michel Muller, Peter Kornerup
 =#
+
 @inline function eftSqrt(a::AbstractFloat)
      x = sqrt(a)
      t = fma(x,-x,a)
      y = t / (x*2.0)
      x,y
 end 
+
+@inline function eftRecipSqrt(a::Float64)
+     r = 1.0/a
+     x = sqrt(r)
+     t = fma(x,-x,r)
+     y = t / (x*2.0)
+     x,y
+end
+
+@inline function eftSquare(a::Float64)
+    x = a * a
+    y = fma(a, a, -x)
+    x,y
+end
+
+@inline function eftCube(a::Float64)
+    p = a*a; e = fma(a, a, -p)
+    x = p*a; p = fma(p, a, -x)
+    y = e*a
+    x,y
+end
