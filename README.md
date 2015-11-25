@@ -1,5 +1,9 @@
 # ErrorFreeArith.jl
-error free transformations for arithmetic ops
+#### Error-Free transformations for arithmetic ops
+```ruby
+                         Jeffrey Sarnoff            2015-Nov-20
+```
+ 
 
 There are two versions, one is inlined.  To use the inlined version, before loading do this:
 
