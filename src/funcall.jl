@@ -56,3 +56,24 @@ function eftSqrt(a::AbstractFloat)
      y = t / (x*2.0)
      x,y
 end 
+
+function eftRecipSqrt(a::Float64)
+     r = 1.0/a
+     x = sqrt(r)
+     t = fma(x,-x,r)
+     y = t / (x*2.0)
+     x,y
+end
+
+function eftSquare(a::Float64)
+    x = a * a
+    y = fma(a, a, -x)
+    x,y
+end
+
+function eftCube(a::Float64)
+    p = a*a; e = fma(a, a, -p)
+    x = p*a; p = fma(p, a, -x)
+    y = e*a
+    x,y
+end
