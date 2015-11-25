@@ -1,6 +1,6 @@
 #= single parameter error-free transformations =#
 
-# sassafrass!  'y' must be negated to get the right result
+# 'y' must be negated to get the right result
 function eftRecip{T<:AbstractFloat}(a::T)
      x = one(T)/a
      y = -(fma(x,a,-1.0)/a)
@@ -74,7 +74,7 @@ function eftProd2{T<:AbstractFloat}(a::T, b::T)
     x,y
 end
 
-# sassafrass!! 'y' must be negated to get the right result
+# 'y' must be negated to get the right result
 function eftDiv2{T<:AbstractFloat}(a::T,b::T)
      x = a/b
      y = -(fma(x,b,-a)/b)
