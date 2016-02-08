@@ -74,6 +74,26 @@ function eftProd2{T<:AbstractFloat}(a::T, b::T)
     x,y
 end
 
+#=
+ div is as good as possible, not quite eft
+ 
+"Concerning the division, the elementary rounding error is
+generally not a floating point number, so it cannot be computed
+exactly. Hence we cannot expect to obtain an error
+free transformation for the division. ...
+This means that the computed approximation is as good as
+we can expect in the working precision."
+-- http://perso.ens-lyon.fr/nicolas.louvet/LaLo05.pdf
+
+ function div2{T<:AbstractFloat}(a::T, b::T)
+          x = a/b
+          v = x*b
+          w = fma(x,b,-v)
+          y = (a - v - w) / b
+          x,y
+       end
+
+=#
 # 'y' must be negated to get the right result
 function eftDiv2{T<:AbstractFloat}(a::T,b::T)
      x = a/b
