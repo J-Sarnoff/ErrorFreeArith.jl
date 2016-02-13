@@ -215,5 +215,6 @@ function eftHorner{T}(p::Polynomials.Poly{T}, x::T)
 end
 
 
+eftHorner{T}(p::Polynomials.Poly{T}, x::Real) = eftHorner(p, convert(T,x))
 
 
