@@ -104,7 +104,7 @@ end
 
 #= three parameter error-free transformations =#
 
-function eftSum3{T<:Float64}(a::T,b::T,c::T)
+function eftSum3{T<:AbstractFloat}(a::T,b::T,c::T)
     s,t = eftSum2(b, c)
     x,u = eftSum2(a, s)
     y,z = eftSum2(u, t)
@@ -112,7 +112,7 @@ function eftSum3{T<:Float64}(a::T,b::T,c::T)
     x,y,z
 end
 
-function eftSum3inOrder{T<:Float64}(a::T,b::T,c::T)
+function eftSum3inOrder{T<:AbstractFloat}(a::T,b::T,c::T)
     s,t = eftSum2inOrder(b, c)
     x,u = eftSum2inOrder(a, s)
     y,z = eftSum2inOrder(u, t)
@@ -120,14 +120,14 @@ function eftSum3inOrder{T<:Float64}(a::T,b::T,c::T)
     x,y,z
 end
 
-function eftProd3{T<:Float64}(a::T, b::T, c::T)
+function eftProd3{T<:AbstractFloat}(a::T, b::T, c::T)
     p,e = eftProd2(a,b)
     x,p = eftProd2(p,c)
     y,z = eftProd2(e,c)
     x,y,z
 end
 
-function eftFMA{T<:Float64}(a::T, b::T, c::T)
+function eftFMA{T<:AbstractFloat}(a::T, b::T, c::T)
     x = fma(a,b,c)
     u1,u2 = eftProd2(a,b)
     a1,a2 = eftSum2(u2,c)
@@ -137,7 +137,7 @@ function eftFMA{T<:Float64}(a::T, b::T, c::T)
     x,y,z
 end
 
-function eftFMS{T<:Float64}(a::T, b::T, c::T)
+function eftFMS{T<:AbstractFloat}(a::T, b::T, c::T)
     x = fma(a,b,c)
     u1,u2 = eftProd2(a,b)
     a1,a2 = eftDiff2(u2,c)
@@ -193,8 +193,8 @@ function eftHorner{T}(p::Polynomials.Poly{T}, x::T)
     s = p.a[n] # coeffs(p)[n]
 
     for i = (n-1):-1:1
-        t, alpha[i] = eftProd2(s, x)
-        s, beta[i]  = eftSum2(t, p.a[i])
+        t, alpha = eftProd2(s, x)
+        s, beta  = eftSum2(t, p.a[i])
      end
      
      s
