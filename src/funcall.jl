@@ -192,7 +192,7 @@ function eftHorner{T}(p::Polynomials.Poly{T}, x::T)
     beta  = zeros(T,n)
     s = p.a[n] # coeffs(p)[n]
 
-    for i = n:-1:1
+    for i = (n-1):-1:1
         t, alpha[i] = eftProd2(s, x)
         s, beta[i]  = eftSum2(t, p.a[i])
      end
@@ -200,9 +200,6 @@ function eftHorner{T}(p::Polynomials.Poly{T}, x::T)
      s
 end
 
-    
-    
-end
 
 
 
