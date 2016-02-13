@@ -68,7 +68,7 @@ function eftDiff2inOrder{T<:AbstractFloat}(a::T, b::T)
   x,y
 end
 
-function eftProd2{T<:AbstractFloat}(a::, b::T)
+function eftProd2{T<:AbstractFloat}(a::T, b::T)
     x = a * b
     y = fma(a, b, -x)
     x,y
