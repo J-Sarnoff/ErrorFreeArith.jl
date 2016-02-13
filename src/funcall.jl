@@ -146,3 +146,63 @@ function eftFMS{T<:Float64}(a::T, b::T, c::T)
     y,z = eftSum2inOrder(g,a2)
     x,y,z
 end
+
+
+# Complex Numbers
+#=
+  Accurate summation, dot product and polynomial evaluation 
+  in complex floating point arithmetic
+  Stef Graillat ∗, Valérie Ménissier-Morain
+  Information and Computation 216 (2012) 57–71
+  http://web.stanford.edu/group/SOL/software/qdotdd/IC2012.pdf
+=#
+
+function eftCplxSum2{T<:AbstractFloat}(x::Complex{T}, y::Complex{T})
+    rhi,ihi = eftSum2(x.re, y.re)
+    rlo,ilo = eftSum2(x.im, y.im)
+    Complex{T}(rhi,rlo), Complex{T}(ihi,ilo)
+end
+
+
+function eftCplxProd2{T<:AbstractFloat}(x::Complex{T}, y::Complex{T})
+    z1,h1 = eftProd2(x.re, y.re)
+    z2,h2 = eftProd2(x.im, y.im)
+    z3,h3 = eftProd2(x.re, y.im)
+    z4,h4 = eftProd2(x.im, y.re)
+    
+    z5,h5 = eftSum2(z1, -z2)
+    z6,h6 = eftSum2(z3,  z4)
+    
+    Complex{T}(z5,z6), Complex{T}(hi,h3), Complex{T}(-h2,h4), Complex{T}(h5,h6)
+end
+
+
+# Polynomials
+#=
+    http://www-pequan.lip6.fr/~jmc/polycopies/Compensation-horner.pdf
+    
+    p = Poly([coeffX0, coeffX1, coeffX2]) # coeffX0 + coeffX1*x + coeffX2*x^2
+    [Horner(p), p_alpha, p_beta] = eftHorner(p)
+    p(x) = Horner(p)(x) + (p_alpha + p_beta)(x)  # iff no underflow
+=#
+
+function eftHorner{T}(p::Polynomials.Poly{T}, x::T)
+    n = length(coeffs(p))
+    alpha = zeros(T,n)
+    beta  = zeros(T,n)
+    s = p.a[n] # coeffs(p)[n]
+
+    for i = n:-1:1
+        t, alpha[i] = eftProd2(s, x)
+        s, beta[i]  = eftSum2(t, p.a[i])
+     end
+     
+     s
+end
+
+    
+    
+end
+
+
+
