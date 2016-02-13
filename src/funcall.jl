@@ -49,6 +49,11 @@ function eftSum2{T<:AbstractFloat}(a::T, b::T)
   x,y
 end
 
+eftSum2{T<:AbstractFloat, R<:Real}(a::T, b::R) = eftSum2(a, convert(T,b))
+eftSum2{T<:AbstractFloat, R<:Real}(a::R, b::T) = eftSum2(convert(T,a), b)
+eftSum2(a::Real, b::Real) = eftSum2(float(a), float(b))
+
+
 function eftSum2inOrder{T<:AbstractFloat}(a::T, b::T)
   x = a + b
   y = b - (x - a)
@@ -62,6 +67,11 @@ function eftDiff2{T<:AbstractFloat}(a::T, b::T)
   x,y
 end
 
+eftDiff2{T<:AbstractFloat, R<:Real}(a::T, b::R) = eftDiff2(a, convert(T,b))
+eftDiff2{T<:AbstractFloat, R<:Real}(a::R, b::T) = eftDiff2(convert(T,a), b)
+eftDiff2(a::Real, b::Real) = eftDiff2(float(a), float(b))
+
+
 function eftDiff2inOrder{T<:AbstractFloat}(a::T, b::T)
   x = a - b
   y = (a - x) - b
@@ -73,6 +83,10 @@ function eftProd2{T<:AbstractFloat}(a::T, b::T)
     y = fma(a, b, -x)
     x,y
 end
+
+eftProd2{T<:AbstractFloat, R<:Real}(a::T, b::R) = eftProd2(a, convert(T,b))
+eftProd2{T<:AbstractFloat, R<:Real}(a::R, b::T) = eftProd2(convert(T,a), b)
+eftProd2(a::Real, b::Real) = efProd2(float(a), float(b))
 
 #=
  div is as good as possible, not quite eft
