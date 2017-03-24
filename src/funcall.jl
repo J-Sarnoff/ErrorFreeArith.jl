@@ -2,9 +2,9 @@
 
 # 'y' must be negated to get the right result
 function eftRecip{T<:AbstractFloat}(a::T)
-     x = one(T)/a
-     y = -(fma(x,a,-1.0)/a)
-     x,y
+     x = one(T) / a
+     y = -(fma(x, a, -1.0) / a)
+     return x, y
 end
 
 #=
@@ -14,30 +14,30 @@ end
 =#
 function eftSqrt{T<:AbstractFloat}(a::T)
      x = sqrt(a)
-     t = fma(x,-x,a)
-     y = t / (x*2.0)
-     x,y
+     t = fma(x, -x, a)
+     y = t / (x+x)
+     return x, y
 end 
 
 function eftRecipSqrt{T<:AbstractFloat}(a::T)
      r = 1.0/a
      x = sqrt(r)
-     t = fma(x,-x,r)
-     y = t / (x*2.0)
-     x,y
+     t = fma(x, -x, r)
+     y = t / (x+x)
+     return x, y
 end
 
 function eftSquare{T<:AbstractFloat}(a::T)
     x = a * a
     y = fma(a, a, -x)
-    x,y
+    return x, y
 end
 
 function eftCube{T<:AbstractFloat}(a::T)
     p = a*a; e = fma(a, a, -p)
     x = p*a; p = fma(p, a, -x)
     y = e*a
-    x,y
+    return x, y
 end
 
 #= two parameter error-free transformations =#
@@ -46,7 +46,7 @@ function eftSum2{T<:AbstractFloat}(a::T, b::T)
   x = a + b
   t = x - a
   y = (a - (x - t)) + (b - t)
-  x,y
+  return x, y
 end
 
 eftSum2{T<:AbstractFloat, R<:Real}(a::T, b::R) = eftSum2(a, convert(T,b))
@@ -57,14 +57,14 @@ eftSum2(a::Real, b::Real) = eftSum2(float(a), float(b))
 function eftSum2inOrder{T<:AbstractFloat}(a::T, b::T)
   x = a + b
   y = b - (x - a)
-  x,y
+  return x, y
 end
 
 function eftDiff2{T<:AbstractFloat}(a::T, b::T)
   x = a - b
   t = x - a
   y = (a - (x - t)) - (b + t)
-  x,y
+  return x, y
 end
 
 eftDiff2{T<:AbstractFloat, R<:Real}(a::T, b::R) = eftDiff2(a, convert(T,b))
@@ -75,13 +75,13 @@ eftDiff2(a::Real, b::Real) = eftDiff2(float(a), float(b))
 function eftDiff2inOrder{T<:AbstractFloat}(a::T, b::T)
   x = a - b
   y = (a - x) - b
-  x,y
+  return x, y
 end
 
 function eftProd2{T<:AbstractFloat}(a::T, b::T)
     x = a * b
     y = fma(a, b, -x)
-    x,y
+    return x, y
 end
 
 eftProd2{T<:AbstractFloat, R<:Real}(a::T, b::R) = eftProd2(a, convert(T,b))
@@ -110,9 +110,9 @@ we can expect in the working precision."
 =#
 # 'y' must be negated to get the right result
 function eftDiv2{T<:AbstractFloat}(a::T,b::T)
-     x = a/b
-     y = -(fma(x,b,-a)/b)
-     x,y
+     x = a / b
+     y = -(fma(x, b,- a) / b)
+     return x, y
 end
 
 
@@ -123,7 +123,7 @@ function eftSum3{T<:AbstractFloat}(a::T,b::T,c::T)
     x,u = eftSum2(a, s)
     y,z = eftSum2(u, t)
     x,y = eftSum2inOrder(x, y)
-    x,y,z
+    return x, y, z
 end
 
 function eftSum3inOrder{T<:AbstractFloat}(a::T,b::T,c::T)
@@ -131,34 +131,34 @@ function eftSum3inOrder{T<:AbstractFloat}(a::T,b::T,c::T)
     x,u = eftSum2inOrder(a, s)
     y,z = eftSum2inOrder(u, t)
     x,y = eftSum2inOrder(x, y)
-    x,y,z
+    return x, y, z
 end
 
 function eftProd3{T<:AbstractFloat}(a::T, b::T, c::T)
-    p,e = eftProd2(a,b)
-    x,p = eftProd2(p,c)
-    y,z = eftProd2(e,c)
-    x,y,z
+    p,e = eftProd2(a, b)
+    x,p = eftProd2(p, c)
+    y,z = eftProd2(e, c)
+    return x, y, z
 end
 
 function eftFMA{T<:AbstractFloat}(a::T, b::T, c::T)
-    x = fma(a,b,c)
-    u1,u2 = eftProd2(a,b)
-    a1,a2 = eftSum2(u2,c)
-    b1,b2 = eftSum2(u1,a1)
-    g = (b1-x)+b2
-    y,z = eftSum2inOrder(g,a2)
-    x,y,z
+    x = fma(a, b, c)
+    u1,u2 = eftProd2(a, b)
+    a1,a2 = eftSum2(u2, c)
+    b1,b2 = eftSum2(u1, a1)
+    g = (b1 - x) + b2
+    y,z = eftSum2inOrder(g, a2)
+    return x, y, z
 end
 
 function eftFMS{T<:AbstractFloat}(a::T, b::T, c::T)
-    x = fma(a,b,c)
-    u1,u2 = eftProd2(a,b)
-    a1,a2 = eftDiff2(u2,c)
-    b1,b2 = eftSum2(u1,a1)
-    g = (b1-x)+b2
-    y,z = eftSum2inOrder(g,a2)
-    x,y,z
+    x = fma(a, b, c)
+    u1,u2 = eftProd2(a, b)
+    a1,a2 = eftDiff2(u2, c)
+    b1,b2 = eftSum2(u1, a1)
+    g = (b1 - x) + b2
+    y,z = eftSum2inOrder(g, a2)
+    return x, y, z
 end
 
 
@@ -174,7 +174,7 @@ end
 function eftCplxSum2{T<:AbstractFloat}(x::Complex{T}, y::Complex{T})
     rhi,ihi = eftSum2(x.re, y.re)
     rlo,ilo = eftSum2(x.im, y.im)
-    Complex(rhi,rlo), Complex(ihi,ilo)
+    return Complex(rhi,rlo), Complex(ihi,ilo)
 end
 
 
@@ -187,7 +187,7 @@ function eftCplxProd2{T<:AbstractFloat}(x::Complex{T}, y::Complex{T})
     z5,h5 = eftSum2(z1, -z2)
     z6,h6 = eftSum2(z3,  z4)
     
-    Complex(z5,z6), Complex(hi,h3), Complex(-h2,h4), Complex(h5,h6)
+    return Complex(z5,z6), Complex(hi,h3), Complex(-h2,h4), Complex(h5,h6)
 end
 
 
@@ -202,19 +202,17 @@ end
 
 function eftHorner{T}(p::Polynomials.Poly{T}, x::T)
     n = length(coeffs(p))
-    alpha = zeros(T,n)
-    beta  = zeros(T,n)
+    alpha = zeros(T, n)
+    beta  = zeros(T, n)
     s = p.a[n] # coeffs(p)[n]
 
     for i = (n-1):-1:1
         t, alpha = eftProd2(s, x)
         s, beta  = eftSum2(t, p.a[i])
-     end
+    end
      
-     s
+    return s
 end
 
 
 eftHorner{T}(p::Polynomials.Poly{T}, x::Real) = eftHorner(p, convert(T,x))
-
-
