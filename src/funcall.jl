@@ -119,43 +119,43 @@ end
 #= three parameter error-free transformations =#
 
 function eftSum3{T<:AbstractFloat}(a::T,b::T,c::T)
-    s,t = eftSum2(b, c)
-    x,u = eftSum2(a, s)
-    y,z = eftSum2(u, t)
-    x,y = eftSum2inOrder(x, y)
+    s, t = eftSum2(b, c)
+    x, u = eftSum2(a, s)
+    y, z = eftSum2(u, t)
+    x, y = eftSum2inOrder(x, y)
     return x, y, z
 end
 
 function eftSum3inOrder{T<:AbstractFloat}(a::T,b::T,c::T)
-    s,t = eftSum2inOrder(b, c)
-    x,u = eftSum2inOrder(a, s)
-    y,z = eftSum2inOrder(u, t)
-    x,y = eftSum2inOrder(x, y)
+    s, t = eftSum2inOrder(b, c)
+    x, u = eftSum2inOrder(a, s)
+    y, z = eftSum2inOrder(u, t)
+    x, y = eftSum2inOrder(x, y)
     return x, y, z
 end
 
 function eftProd3{T<:AbstractFloat}(a::T, b::T, c::T)
-    p,e = eftProd2(a, b)
-    x,p = eftProd2(p, c)
-    y,z = eftProd2(e, c)
+    p, e = eftProd2(a, b)
+    x, p = eftProd2(p, c)
+    y, z = eftProd2(e, c)
     return x, y, z
 end
 
 function eftFMA{T<:AbstractFloat}(a::T, b::T, c::T)
     x = fma(a, b, c)
-    u1,u2 = eftProd2(a, b)
-    a1,a2 = eftSum2(u2, c)
-    b1,b2 = eftSum2(u1, a1)
+    u1, u2 = eftProd2(a, b)
+    a1, a2 = eftSum2(u2, c)
+    b1, b2 = eftSum2(u1, a1)
     g = (b1 - x) + b2
-    y,z = eftSum2inOrder(g, a2)
+    y, z = eftSum2inOrder(g, a2)
     return x, y, z
 end
 
 function eftFMS{T<:AbstractFloat}(a::T, b::T, c::T)
     x = fma(a, b, c)
-    u1,u2 = eftProd2(a, b)
-    a1,a2 = eftDiff2(u2, c)
-    b1,b2 = eftSum2(u1, a1)
+    u1, u2 = eftProd2(a, b)
+    a1, a2 = eftDiff2(u2, c)
+    b1, b2 = eftSum2(u1, a1)
     g = (b1 - x) + b2
     y,z = eftSum2inOrder(g, a2)
     return x, y, z
@@ -172,20 +172,20 @@ end
 =#
 
 function eftCplxSum2{T<:AbstractFloat}(x::Complex{T}, y::Complex{T})
-    rhi,ihi = eftSum2(x.re, y.re)
-    rlo,ilo = eftSum2(x.im, y.im)
+    rhi, ihi = eftSum2(x.re, y.re)
+    rlo, ilo = eftSum2(x.im, y.im)
     return Complex(rhi,rlo), Complex(ihi,ilo)
 end
 
 
 function eftCplxProd2{T<:AbstractFloat}(x::Complex{T}, y::Complex{T})
-    z1,h1 = eftProd2(x.re, y.re)
-    z2,h2 = eftProd2(x.im, y.im)
-    z3,h3 = eftProd2(x.re, y.im)
-    z4,h4 = eftProd2(x.im, y.re)
+    z1, h1 = eftProd2(x.re, y.re)
+    z2, h2 = eftProd2(x.im, y.im)
+    z3, h3 = eftProd2(x.re, y.im)
+    z4, h4 = eftProd2(x.im, y.re)
     
-    z5,h5 = eftSum2(z1, -z2)
-    z6,h6 = eftSum2(z3,  z4)
+    z5, h5 = eftSum2(z1, -z2)
+    z6, h6 = eftSum2(z3,  z4)
     
     return Complex(z5,z6), Complex(hi,h3), Complex(-h2,h4), Complex(h5,h6)
 end
