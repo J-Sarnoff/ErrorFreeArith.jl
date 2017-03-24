@@ -84,8 +84,8 @@ function eftProd2{T<:AbstractFloat}(a::T, b::T)
     return x, y
 end
 
-eftProd2{T<:AbstractFloat, R<:Real}(a::T, b::R) = eftProd2(a, convert(T,b))
-eftProd2{T<:AbstractFloat, R<:Real}(a::R, b::T) = eftProd2(convert(T,a), b)
+eftProd2{T<:AbstractFloat, R<:Real}(a::T, b::R) = eftProd2(a, convert(T, b))
+eftProd2{T<:AbstractFloat, R<:Real}(a::R, b::T) = eftProd2(convert(T, a), b)
 eftProd2(a::Real, b::Real) = efProd2(float(a), float(b))
 
 #=
